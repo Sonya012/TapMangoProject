@@ -34,6 +34,16 @@ namespace TapMangoTakeHomeProject.Controller
             {
                 return StatusCode(429, "The rate limit exceeded for the account.");
             }
+            catch (PhoneNumberSMSCheckException ex) when
+                  (ex.ErrorCode == PhoneNumberCanSendResponseErrors.CooldownTimeExceeded)
+            {
+                return StatusCode(429, "The colddown time is exceeded.");
+            }
+            catch (PhoneNumberSMSCheckException ex) when
+                  (ex.ErrorCode == PhoneNumberCanSendResponseErrors.NumberIsInactive)
+            {
+                return StatusCode(429, "The number is inactive.");
+            }
             catch
             {
                 return StatusCode(500, "Unexpected error has occurred, please contact administration.");
